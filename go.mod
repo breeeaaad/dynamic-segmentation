@@ -1,4 +1,4 @@
-module github.com/breeeaaad/avito
+module github.com/breeeaaad/dynamic-segmentation
 
 go 1.20
 

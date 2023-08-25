@@ -1,9 +1,15 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/account"
+	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/segment"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	r := gin.Default
-	r.GET()
+	r := gin.Default()
+	r.POST("/:id", account.CreateId)
+	r.POST("/create", segment.CreateSeg)
+	r.DELETE("/delete/:segment", segment.DeleteSeg)
 	r.Run()
 }
