@@ -13,5 +13,6 @@ func main() {
 	r.POST("/create", segment.CreateSeg)
 	r.DELETE("/delete/:segment", segment.DeleteSeg)
 	r.POST("/adding", editing.SegmentEd)
+	r.GET("/:id", account.ViewInfo)
 	r.Run()
 }
