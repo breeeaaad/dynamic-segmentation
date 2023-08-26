@@ -7,3 +7,9 @@ type User struct {
 type Segment struct {
 	Name string `uri:"segment" json:"segment"`
 }
+
+type Add struct {
+	Id          int      `json:"id"`
+	Addsegments []string `json:"addsegments"`
+	Delsegments []string `json:"delsegments"`
+}
