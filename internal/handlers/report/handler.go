@@ -11,7 +11,8 @@ import (
 )
 
 func Download(c *gin.Context) {
-	var data, datad [][]string
+	data := [][]string{{"user_id", "segment_name", "procedure", "date"}}
+	var datad [][]string
 	date := c.Query("date")
 	conn := config.Config()
 	defer conn.Close(context.Background())
