@@ -25,8 +25,8 @@ func Download(c *gin.Context) {
 		return
 	}
 	data = append(data, datad...)
-	c.Set("Content-Type", "text/csv")
-	c.Set("Content-Disposition", "attachment;filename=report.csv")
+	c.Header("Content-Type", "text/csv")
+	c.Header("Content-Disposition", "attachment;filename=report.csv")
 	wr := csv.NewWriter(c.Writer)
 	if err := wr.WriteAll(data); err != nil {
 		c.JSON(500, gin.H{"msg": err})
