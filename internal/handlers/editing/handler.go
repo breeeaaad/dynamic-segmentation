@@ -2,6 +2,7 @@ package editing
 
 import (
 	"context"
+	"fmt"
 
 	config "github.com/breeeaaad/dynamic-segmentation/configs"
 	"github.com/breeeaaad/dynamic-segmentation/internal/helpers"
@@ -19,6 +20,7 @@ func SegmentEd(c *gin.Context) {
 	defer conn.Close(context.Background())
 	if err := repository.Addsegments(conn, add); err != nil {
 		c.JSON(400, gin.H{"msg": err})
+		fmt.Print(err)
 		return
 	}
 	if err := repository.Delsegments(conn, add); err != nil {

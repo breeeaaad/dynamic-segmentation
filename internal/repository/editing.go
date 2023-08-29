@@ -9,17 +9,22 @@ import (
 )
 
 func Addsegments(conn *pgx.Conn, add helpers.Add) error {
-	if _, err := conn.Exec(
-		context.Background(),
-		"insert into adding(user_id,added_at,segment_id) select $1 , $2, segment_id from segments where segment_name=any($3)",
-		add.Id, time.Now(), add.Addsegments,
-	); err != nil {
-		return err
+	var a []string
+	for i := 0; i < len(add.Addsegments); i++ {
+		a = append(a, add.Addsegments[i].Segment)
+	}
+	for i := 0; i < len(add.Addsegments); i++ {
+		if _, err := conn.Exec(
+			context.Background(),
+			"insert into adding(user_id,added_at,segment_id,rm_at) select $1 , $2, segment_id,$3 from segments where segment_name=$4",
+			add.Id, time.Now(), add.Addsegments[i].Interval+" day", add.Addsegments[i].Segment); err != nil {
+			return err
+		}
 	}
 	if _, err := conn.Exec(
 		context.Background(),
 		"insert into history(user_id,added_at,segment_name) select $1,$2,segment_name from segments where segment_name=any($3)",
-		add.Id, time.Now(), add.Addsegments,
+		add.Id, time.Now(), a,
 	); err != nil {
 		return err
 	}

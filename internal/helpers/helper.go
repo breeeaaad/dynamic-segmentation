@@ -10,7 +10,10 @@ type Segment struct {
 }
 
 type Add struct {
-	Id          int      `json:"id"`
-	Addsegments []string `json:"addsegments"`
+	Id          int `json:"id"`
+	Addsegments []struct {
+		Segment  string `json:"segment"`
+		Interval string `json:"interval"`
+	} `json:"addsegments"`
 	Delsegments []string `json:"delsegments"`
 }
