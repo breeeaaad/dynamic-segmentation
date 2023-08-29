@@ -5,7 +5,8 @@ type User struct {
 }
 
 type Segment struct {
-	Name string `uri:"segment" json:"segment"`
+	Name    string  `uri:"segment" json:"segment"`
+	Percent float32 `json:"percent"`
 }
 
 type Add struct {

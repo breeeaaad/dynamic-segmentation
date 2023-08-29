@@ -10,7 +10,7 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.POST("/:id", account.CreateId)
+	r.POST("/newuser", account.CreateId)
 	r.POST("/create", segment.CreateSeg)
 	r.DELETE("/delete/:segment", segment.DeleteSeg)
 	r.POST("/editing", editing.SegmentEd)

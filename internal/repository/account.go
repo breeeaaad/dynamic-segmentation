@@ -7,13 +7,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func AddUser(conn *pgx.Conn, id helpers.User) error {
-	_, err := conn.Exec(
+func AddUser(conn *pgx.Conn) (int, error) {
+	var id int
+	err := conn.QueryRow(
 		context.Background(),
-		"insert into users(user_id) values($1)",
-		id.Id,
-	)
-	return err
+		"insert into users(user_id) values(default) returning user_id",
+	).Scan(&id)
+	return id, err
 }
 
 func View(conn *pgx.Conn, id helpers.User, segment *[]string) error {
