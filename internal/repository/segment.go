@@ -43,10 +43,19 @@ func SegmentCr(conn *pgx.Conn, segment helpers.Segment) error {
 }
 
 func SegmentDel(conn *pgx.Conn, segment helpers.Segment) error {
-	_, err := conn.Exec(
+	if _, err := conn.Exec(
 		context.Background(),
 		"delete from segments where segment_name=$1",
 		segment.Name,
-	)
-	return err
+	); err != nil {
+		return err
+	}
+	if _, err := conn.Exec(
+		context.Background(),
+		"update history set deleted_at=$1 where segment_name=$2",
+		time.Now, segment.Name,
+	); err != nil {
+		return err
+	}
+	return nil
 }
