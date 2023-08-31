@@ -1,2 +1,2 @@
-run:
-	go run cmd/api/main.go
+build:
+	docker-compose up --build api

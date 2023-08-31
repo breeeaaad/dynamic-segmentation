@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: dinamic-segmentation
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "${LOCAL_DB_PORT}:${DB_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: on-failure
+
+volumes:
+  pg-data:
