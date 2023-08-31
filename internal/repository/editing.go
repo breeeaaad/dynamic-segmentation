@@ -14,11 +14,20 @@ func Addsegments(conn *pgx.Conn, add helpers.Add) error {
 		a = append(a, add.Addsegments[i].Segment)
 	}
 	for i := 0; i < len(add.Addsegments); i++ {
-		if _, err := conn.Exec(
-			context.Background(),
-			"insert into adding(user_id,added_at,segment_id,rm_at) select $1 , $2, segment_id,$3 from segments where segment_name=$4",
-			add.Id, time.Now(), add.Addsegments[i].Interval+" day", add.Addsegments[i].Segment); err != nil {
-			return err
+		if add.Addsegments[i].Interval == "" {
+			if _, err := conn.Exec(
+				context.Background(),
+				"insert into adding(user_id,added_at,segment_id) select $1 , $2, segment_id from segments where segment_name=$3",
+				add.Id, time.Now(), add.Addsegments[i].Segment); err != nil {
+				return err
+			}
+		} else {
+			if _, err := conn.Exec(
+				context.Background(),
+				"insert into adding(user_id,added_at,segment_id,rm_at) select $1 , $2, segment_id,$3 from segments where segment_name=$4",
+				add.Id, time.Now(), add.Addsegments[i].Interval+" day", add.Addsegments[i].Segment); err != nil {
+				return err
+			}
 		}
 	}
 	if _, err := conn.Exec(

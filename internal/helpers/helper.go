@@ -5,12 +5,12 @@ type User struct {
 }
 
 type Segment struct {
-	Name    string  `uri:"segment" json:"segment"`
+	Name    string  `uri:"segment" json:"segment" binding:"required"`
 	Percent float32 `json:"percent"`
 }
 
 type Add struct {
-	Id          int `json:"id"`
+	Id          int `json:"id" binding:"required"`
 	Addsegments []struct {
 		Segment  string `json:"segment"`
 		Interval string `json:"interval"`

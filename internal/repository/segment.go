@@ -53,7 +53,7 @@ func SegmentDel(conn *pgx.Conn, segment helpers.Segment) error {
 	if _, err := conn.Exec(
 		context.Background(),
 		"update history set deleted_at=$1 where segment_name=$2",
-		time.Now, segment.Name,
+		time.Now(), segment.Name,
 	); err != nil {
 		return err
 	}
