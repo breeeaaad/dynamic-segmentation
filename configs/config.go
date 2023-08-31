@@ -10,21 +10,50 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func Config() *pgx.Conn {
-	if err := godotenv.Load(); err != nil {
+var (
+	conn *pgx.Conn
+)
+
+const (
+	defaultPostgresUser     = "postgres"
+	defaultPostgresPassword = "12345"
+	defaultPostgresHost     = "postgres"
+	defaultPostgresDB       = "dynamic-segmentation"
+	defaultPostgresPort     = "5432"
+)
+
+func init() {
+	initConnection()
+}
+
+func initConnection() {
+	var err error
+	if err = godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	user := os.Getenv("POSTGRES_USER")
-	password := os.Getenv("POSTGRES_PASSWORD")
-	host := os.Getenv("POSTGRES_HOST")
-	db := os.Getenv("POSTGRES_DB")
-	port := os.Getenv("POSTGRES_PORT")
+	user := getEnvOrFallback("POSTGRES_USER", defaultPostgresUser)
+	password := getEnvOrFallback("POSTGRES_PASSWORD", defaultPostgresPassword)
+	host := getEnvOrFallback("POSTGRES_HOST", defaultPostgresHost)
+	db := getEnvOrFallback("POSTGRES_DB", defaultPostgresDB)
+	port := getEnvOrFallback("POSTGRES_PORT", defaultPostgresPort)
 	dburl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, password, host, port, db)
-	conn, err := pgx.Connect(context.Background(), dburl)
+	conn, err = pgx.Connect(context.Background(), dburl)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("Unable to connect to database: %s", err)
+	}
+}
+
+func Config() *pgx.Conn {
+	if conn == nil {
+		panic("unexpected conn == nil")
 	}
 	return conn
+}
+
+func getEnvOrFallback(name, fallback string) string {
+	if value := os.Getenv(name); value != "" {
+		return value
+	}
+	return fallback
 }

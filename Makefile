@@ -1,8 +1,9 @@
 build:
-	docker-compose up --build
+    chmod +x ./envs.sh && ./envs.sh
+    docker-compose up --build
 
 run: build
-	docker-compose up --remove-orphans
+    docker-compose up --remove-orphans
 
 stop: 
-	docker-compose down --remove-orphans
+    docker-compose down --remove-orphans
