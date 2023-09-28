@@ -5,10 +5,10 @@ export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=12345
 
 build:
-    docker-compose up --build
+	docker-compose up --build
 
 run: build
-    docker-compose up --remove-orphans
+	docker-compose up --remove-orphans
 
 stop: 
-    docker-compose down --remove-orphans
+	docker-compose down --remove-orphans
