@@ -3,12 +3,10 @@ package repository
 import (
 	"context"
 	"time"
-
-	"github.com/jackc/pgx/v5"
 )
 
-func GetAdd(conn *pgx.Conn, date string, data *[][]string) error {
-	rows, err := conn.Query(
+func (s *Service) GetAdd(date string, data *[][]string) error {
+	rows, err := s.conn.Query(
 		context.Background(),
 		"select user_id,segment_name,added_at from history WHERE added_at::text LIKE $1",
 		date+"-%",
@@ -33,8 +31,8 @@ func GetAdd(conn *pgx.Conn, date string, data *[][]string) error {
 	return nil
 }
 
-func GetDel(conn *pgx.Conn, date string, datad *[][]string) error {
-	rows, err := conn.Query(
+func (s *Service) GetDel(date string, datad *[][]string) error {
+	rows, err := s.conn.Query(
 		context.Background(),
 		"select user_id,segment_name,deleted_at from history WHERE deleted_at::text LIKE $1",
 		date+"-%",

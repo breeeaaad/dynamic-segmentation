@@ -1,22 +1,26 @@
 package main
 
 import (
-	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/account"
-	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/editing"
-	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/report"
-	"github.com/breeeaaad/dynamic-segmentation/internal/handlers/segment"
+	"context"
+
+	config "github.com/breeeaaad/dynamic-segmentation/configs"
+	"github.com/breeeaaad/dynamic-segmentation/internal/handlers"
 	"github.com/breeeaaad/dynamic-segmentation/internal/repository"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	conn := config.Config()
+	defer conn.Close(context.Background())
+	repository := repository.New(conn)
+	handlers := handlers.New(repository)
 	go repository.Bg()
 	r := gin.Default()
-	r.POST("/newuser", account.CreateId)
-	r.POST("/create", segment.CreateSeg)
-	r.DELETE("/delete/:segment", segment.DeleteSeg)
-	r.POST("/editing", editing.SegmentEd)
-	r.GET("/:id", account.ViewInfo)
-	r.GET("/download", report.Download)
+	r.POST("/newuser", handlers.CreateId)
+	r.POST("/create", handlers.CreateSeg)
+	r.DELETE("/delete/:segment", handlers.DeleteSeg)
+	r.POST("/editing", handlers.SegmentEd)
+	r.GET("/:id", handlers.ViewInfo)
+	r.GET("/download", handlers.Download)
 	r.Run()
 }
