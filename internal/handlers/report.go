@@ -11,11 +11,11 @@ func (h *Handlers) Download(c *gin.Context) {
 	var datad [][]string
 	date := c.Query("date")
 	if err := h.s.GetAdd(date, &data); err != nil {
-		c.JSON(400, gin.H{"msg": err})
+		c.JSON(400, gin.H{"msg": err.Error()})
 		return
 	}
 	if err := h.s.GetDel(date, &datad); err != nil {
-		c.JSON(400, gin.H{"msg": err})
+		c.JSON(400, gin.H{"msg": err.Error()})
 		return
 	}
 	data = append(data, datad...)
@@ -23,7 +23,7 @@ func (h *Handlers) Download(c *gin.Context) {
 	c.Header("Content-Disposition", "attachment;filename=report.csv")
 	wr := csv.NewWriter(c.Writer)
 	if err := wr.WriteAll(data); err != nil {
-		c.JSON(500, gin.H{"msg": err})
+		c.JSON(500, gin.H{"msg": err.Error()})
 		return
 	}
 }
